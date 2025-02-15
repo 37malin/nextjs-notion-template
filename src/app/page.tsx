@@ -1,37 +1,32 @@
-import { getDatabaseItems, getPageBlocks } from "../../lib/notion";
-import Image from "next/image";
+// page.tsx
+import { getDatabaseItems } from "../../lib/notion";
+import Link from "next/link";
 
 export default async function Home() {
   const items = await getDatabaseItems();
 
-  const itemsWithDetails = await Promise.all(
-    items.map(async (item) => {
-      const blocks = await getPageBlocks(item.id);
-      return { ...item, blocks };
-    })
-  );
-
   return (
-    <div>
-      <h1>Notion Database Items</h1>
-      {itemsWithDetails.map((item) => (
-        <section key={item.id}>
-          <h2>{item.name}</h2>
-          <div>
-            {item.blocks.map((block) => {
-              if (!block) return null; // null の場合はスキップ
-              if (block.type === "paragraph") {
-                return <p key={block.id}>{block.content}</p>;
-              } else if (block.type === "heading_2") {
-                return <h2 key={block.id}>{block.content}</h2>;
-              } else if (block.type === "image") {
-                return <Image key={block.id} src={block.imageUrl} alt="Notion Image" width={600} height={400} />;
-              }
-              return null;
-            })}
-          </div>
-        </section>
-      ))}
+    <div className="flex min-h-screen">
+      {/* 左側のサイドメニュー */}
+      <div className="w-64 bg-gray-100 p-4 fixed h-full overflow-y-auto">
+        <h1 className="text-xl font-bold mb-4">Contents</h1>
+        <nav>
+          {items.map((item) => (
+            <Link
+              key={item.id}
+              href={`/pages/${item.id}`}
+              className="block p-2 rounded hover:bg-gray-200 mb-1"
+            >
+              {item.name}
+            </Link>
+          ))}
+        </nav>
+      </div>
+
+      {/* 右側のコンテンツエリア */}
+      <div className="ml-64 flex-1 p-6">
+        <h2 className="text-2xl font-bold">ページを選択してください</h2>
+      </div>
     </div>
   );
 }
