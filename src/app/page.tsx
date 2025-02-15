@@ -8,6 +8,8 @@ type Item = {
   url: string;
 };
 
+export const revalidate = 10;
+
 export default async function Home() {
   const items = await getDatabaseItems();
 
