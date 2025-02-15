@@ -4,7 +4,27 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-export default async function Page({ params }: { params: { id: string } }) {
+// 型定義
+type PageProps = {
+  params: {
+    id: string;
+  };
+};
+
+type Block = {
+  id: string;
+  type: string;
+  content?: string;
+  imageUrl?: string;
+};
+
+type Item = {
+  id: string;
+  name: string;
+  url: string;
+};
+
+export default async function Page({ params }: PageProps) {
   // 全てのアイテムを取得（サイドメニュー用）
   const items = await getDatabaseItems();
   
@@ -41,7 +61,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         <div>
           <h2 className="text-2xl font-bold p-6 border-b">{currentItem.name}</h2>
           <div className="p-6">
-            {blocks.map((block) => {
+            {blocks.map((block: Block) => {
               if (!block) return null;
               if (block.type === "paragraph") {
                 return <p key={block.id} className="my-4">{block.content}</p>;
@@ -61,7 +81,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 return (
                   <div key={block.id} className="my-4">
                     <Image
-                      src={block.imageUrl}
+                      src={block.imageUrl || ''}
                       alt="Notion Image"
                       width={600}
                       height={400}

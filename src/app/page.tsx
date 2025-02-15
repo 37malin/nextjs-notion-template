@@ -1,6 +1,12 @@
-// page.tsx
+// app/page.tsx
 import { getDatabaseItems } from "../../lib/notion";
 import Link from "next/link";
+
+type Item = {
+  id: string;
+  name: string;
+  url: string;
+};
 
 export default async function Home() {
   const items = await getDatabaseItems();
@@ -11,7 +17,7 @@ export default async function Home() {
       <div className="w-64 bg-gray-100 p-4 fixed h-full overflow-y-auto">
         <h1 className="text-xl font-bold mb-4">Contents</h1>
         <nav>
-          {items.map((item) => (
+          {items.map((item: Item) => (
             <Link
               key={item.id}
               href={`/pages/${item.id}`}
