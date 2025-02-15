@@ -26,6 +26,8 @@ export async function generateStaticParams() {
   return items.map((item: NotionItem) => ({ id: item.id }));
 }
 
+export const revalidate = 10;
+
 export default async function Page({ params }: Props) {
   // params を await して解決する
   const { id } = await params;
